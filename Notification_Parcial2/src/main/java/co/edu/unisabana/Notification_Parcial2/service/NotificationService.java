@@ -20,7 +20,7 @@ public class NotificationService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public void sendPaymentSuccessNotification(String event) {
-        Integer id = extractCustomerId(event); // Change from String to Integer
+        Integer id = extractCustomerId(event);
         String email = getEmailByCustomerId(id);
         String message = "Your payment was successful! Your order is being processed.";
 
@@ -28,7 +28,7 @@ public class NotificationService {
     }
 
     public void sendPaymentFailedNotification(String event) {
-        Integer id = extractCustomerId(event); // Change from String to Integer
+        Integer id = extractCustomerId(event);
         String email = getEmailByCustomerId(id);
         String message = "Unfortunately, your payment failed. Please try again.";
 
@@ -36,7 +36,7 @@ public class NotificationService {
     }
 
     public void sendOrderShippedNotification(String event) {
-        Integer id = extractCustomerId(event); // Change from String to Integer
+        Integer id = extractCustomerId(event);
         String email = getEmailByCustomerId(id);
         String message = "Your order has been shipped! Tracking Number: ";
 
@@ -55,15 +55,21 @@ public class NotificationService {
     private Integer extractCustomerId(String event) {
         try {
             JsonNode jsonNode = objectMapper.readTree(event);
-            return jsonNode.get("id").asInt();
+            return jsonNode.get("customerId").asInt();
         } catch (Exception e) {
-            System.err.println("Failed to extract customerId: " + e.getMessage());
+            System.err.println("Failed to extract customerId from event: " + event);
+            System.err.println("Error details: " + e.getMessage());
             return null;
         }
     }
 
 
+
     private String getEmailByCustomerId(Integer customerId) {
+        if (customerId == null) {
+            System.err.println("CustomerId is null, cannot retrieve email.");
+            return null; // o maneja el caso según lo necesites
+        }
         return customerRepository.findEmailById(customerId);
     }
 
