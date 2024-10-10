@@ -1,12 +1,15 @@
 package co.edu.unisabana.Notification_Parcial2.service;
 
 import co.edu.unisabana.Notification_Parcial2.repository.CustomerRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.logging.Logger;
+
 
 @Service
 public class NotificationService {
@@ -17,6 +20,8 @@ public class NotificationService {
     @Autowired
     private CustomerRepository customerRepository;
 
+    private static final Logger logger = Logger.getLogger(NotificationService.class.getName());
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public void sendPaymentSuccessNotification(String event) {
@@ -25,6 +30,7 @@ public class NotificationService {
         String message = "Your payment was successful! Your order is being processed.";
 
         sendEmail(email, "Payment Confirmation", message);
+        logger.info("El correo se mando correctamente");
     }
 
     public void sendPaymentFailedNotification(String event) {
@@ -33,6 +39,7 @@ public class NotificationService {
         String message = "Unfortunately, your payment failed. Please try again.";
 
         sendEmail(email, "Payment Failed", message);
+        logger.info("El correo fallo");
     }
 
     public void sendOrderShippedNotification(String event) {
@@ -41,6 +48,7 @@ public class NotificationService {
         String message = "Your order has been shipped! Tracking Number: ";
 
         sendEmail(email, "Order Shipped", message);
+        logger.info("La orden fue despachada");
     }
 
 
